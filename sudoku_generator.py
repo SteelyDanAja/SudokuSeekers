@@ -145,4 +145,8 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
+<<<<<<< HEAD
     # Got this from given sudoku_generator.py file.
+=======
+    # Got this from given sudoku_generator.py file.
+>>>>>>> origin/main
