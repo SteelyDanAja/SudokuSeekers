@@ -29,8 +29,8 @@ class SudokuGenerator:
         return True
     # Checks in range 9 so goes through each row in that col to check if num is in it. If yes, returns False; else returns True.
     def valid_in_box(self, row_start, col_start, num):
-        for row in range(2):
-            for col in range(2):
+        for row in range(3):
+            for col in range(3):
                 if num == self.board[row + row_start][col + col_start]:
                     return True
         return False
@@ -127,8 +127,8 @@ class SudokuGenerator:
             row = random.randint(0, 8)
             col = random.randint(0, 8)
             if (row, col) not in random_set:
-                counter += 1
                 self.board[row][col] = 0
+                counter += 1
                 random_set.add((row, col))
         # Call this function after all the values are filled for the sudoku puzzle. Used similar randomness in fill box to generate ordered pairs. I used ChatGPT to find out how to generate a random integer 0 - 8
 
@@ -139,4 +139,3 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
-    # Got this from given sudoku_generator.py file.
