@@ -29,50 +29,25 @@ class SudokuGenerator:
         return True
     # Checks in range 9 so goes through each row in that col to check if num is in it. If yes, returns False; else returns True.
     def valid_in_box(self, row_start, col_start, num):
-        for row in range(2):
-            for col in range(2):
+        for row in range(3):
+            for col in range(3):
                 if num == self.board[row + row_start][col + col_start]:
-                    return True
-        return False
+                    return False
+        return True
     # Goes from the start of a row to two below the row and from start of col to two right of col to see if num is in it. Returns False if not in box.
     def is_valid(self, row, col, num):
         if self.valid_in_row(row, num) == False:
             return False
         elif self.valid_in_col(col, num) == False:
             return False
-        elif row <= 2:
-            if col <= 2:
-                if self.valid_in_box(0, 0, num) == False:
-                    return False
-            elif 3 <= col <= 5:
-                if self.valid_in_box(0, 3, num) == False:
-                    return False
-            else:
-                if self.valid_in_box(0, 6, num) == False:
-                    return False
-        elif 3 <= row <= 5:
-            if col <= 2:
-                if self.valid_in_box(3, 0, num) == False:
-                    return False
-            elif 3 <= col <= 5:
-                if self.valid_in_box(3, 3, num) == False:
-                    return False
-            else:
-                if self.valid_in_box(3, 6, num) == False:
-                    return False
-        elif 6 <= row:
-            if col <= 2:
-                if self.valid_in_box(6, 0, num) == False:
-                    return False
-            elif 3 <= col <= 5:
-                if self.valid_in_box(6, 3, num) == False:
-                    return False
-            else:
-                if self.valid_in_box(6, 6, num) == False:
-                    return False
         else:
-            return True
-    # Goes through to check if given num is valid in that row, valid in the col, and valid in the box. If not valid, returns False; else, returns True
+            row_checker = (row // 3) * 3
+            col_checker = (col // 3) * 3
+            if self.valid_in_box(row_checker, col_checker, num) == False:
+                return False
+            else:
+                return True
+    # Goes through to check if given num is valid in that row, valid in the col, and valid in the box. If not valid, returns False; else, returns True. Used Chat GPT to simplify the box checker portion of code.
     def fill_box(self, row_start, col_start):
         self.counter = 0
         self.random_array = random.sample(range(1, 10), 9)
@@ -127,8 +102,8 @@ class SudokuGenerator:
             row = random.randint(0, 8)
             col = random.randint(0, 8)
             if (row, col) not in random_set:
-                counter += 1
                 self.board[row][col] = 0
+                counter += 1
                 random_set.add((row, col))
         # Call this function after all the values are filled for the sudoku puzzle. Used similar randomness in fill box to generate ordered pairs. I used ChatGPT to find out how to generate a random integer 0 - 8
 
@@ -139,4 +114,3 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
-    # Got this from given sudoku_generator.py file.
