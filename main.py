@@ -1,3 +1,4 @@
+from sudoku_generator import SudokuGenerator
 import pygame
 from constants import *
 import sys
@@ -30,7 +31,7 @@ option_texts = [
 total_button_width = len(option_texts) * BUTTON_WIDTH + (len(option_texts) - 1) * BUTTON_BUFFER
 button_start_x = (WIDTH - total_button_width) // 2
 option_rects = [
-    pygame.Rect(button_start_x + (BUTTON_WIDTH + BUTTON_BUFFER) * i, 400, BUTTON_WIDTH, BUTTON_HEIGHT )
+    pygame.Rect(button_start_x + (BUTTON_WIDTH + BUTTON_BUFFER) * i, 400, BUTTON_WIDTH, BUTTON_HEIGHT)
     for i in range(len(option_texts))
 ]
 
@@ -69,6 +70,74 @@ while running:
 
     # Update the display
     pygame.display.flip()
+
+
+def draw_board(screen, sudoku, solved, original):
+    font = pygame.font.SysFont("Arial", 35)
+
+    for i in range(0, 10):
+        if i % 3 == 0:
+            pygame.draw.line(screen, (0, 0, 0), (50 + 50 * i, 50), (50 + 50 * i, 500), 4)
+            pygame.draw.line(screen, (0, 0, 0), (50, 50 + 50 * i), (500, 50 + 50 * i), 4)
+        pygame.draw.line(screen, (0, 0, 0), (50 + 50 * i, 50), (50 + 50 * i, 500), 2)
+        pygame.draw.line(screen, (0, 0, 0), (50, 50 + 50 * i), (500, 50 + 50 * i), 2)
+    pygame.display.update()
+
+    for x in range(0, len(sudoku[0])):
+        for j in range(0, len(sudoku[0])):
+            if 0 < sudoku[x][j] < 10:
+                value = font.render(str(sudoku[x][j]), True, (0, 0, 0))
+                screen.blit(value, ((j + 1) * 50 + 15, (x + 1) * 50))
+    pygame.display.update()
+
+    button_font = pygame.font.Font(None, 30)
+    reset_button = button_font.render("Reset", 0, (255, 255, 255))
+    restart_button = button_font.render("Restart", 0, (255, 255, 255))
+    exit_button = button_font.render("Exit", 0, (255, 255, 255))
+
+    reset_surface = pygame.Surface((reset_button.get_size()[0] + 15, reset_button.get_size()[1] + 15))
+    reset_surface.fill(LINE_COLOR)
+    reset_surface.blit(reset_button, (10, 10))
+
+    restart_surface = pygame.Surface((restart_button.get_size()[0] + 15, restart_button.get_size()[1] + 15))
+    restart_surface.fill(LINE_COLOR)
+    restart_surface.blit(restart_button, (10, 10))
+
+    exit_surface = pygame.Surface((exit_button.get_size()[0] + 15, exit_button.get_size()[1] + 15))
+    exit_surface.fill(LINE_COLOR)
+    exit_surface.blit(exit_button, (10, 10))
+
+    reset_rectangle = reset_surface.get_rect(center=(WIDTH // 3 - 80, HEIGHT // 3 + 340))
+    restart_rectangle = restart_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 250))
+    exit_rectangle = exit_surface.get_rect(center=(WIDTH - 100, HEIGHT // 3 + 340))
+
+    screen.blit(reset_surface, reset_rectangle)
+    screen.blit(restart_surface, restart_rectangle)
+    screen.blit(exit_surface, exit_rectangle)
+
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if reset_rectangle.collidepoint(event.pos):
+                    screen.fill(BG_COLOR)
+                    sudoku_board = original
+                    draw_board(screen, sudoku_board, solved, original)
+                    return
+                if restart_rectangle.collidepoint(event.pos):
+                    return
+                if exit_rectangle.collidepoint(event.pos):
+                    pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    insert_num(screen, (pos[0] // 50, pos[1] // 50), sudoku, original)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    if check_board_full(sudoku) is True:
+                        draw_game_over(screen, sudoku, solved)
+        pygame.display.update()
+
 
 # Quit pygame
 pygame.quit()
