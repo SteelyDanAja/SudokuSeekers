@@ -2,14 +2,9 @@ import math,random
 
 class SudokuGenerator:
     # First array in array is the row, then in the row are the column numbers. This is how i am making the board for reference
-    def __init__(self, row_length=9, removed_cells):
+    def __init__(self, row_length=9, removed_cells=30):
         self.row_length = row_length
-        if board.difficulty == 'easy':
-            self.removed_cells = 30
-        elif board.difficulty == 'medium':
-            self.removed_cells = 40
-        else:
-            self.removed_cells = 50
+        self.removed_cells = removed_cells
         self.board = [['0' for i in range(9)] for j in range(9)]
         self.box_length = 3
         # Person doing board difficulty can change board.difficulty == based on what they want ot select
@@ -81,8 +76,8 @@ class SudokuGenerator:
     def fill_box(self, row_start, col_start):
         self.counter = 0
         self.random_array = random.sample(range(1, 10), 9)
-        for row in range(2):
-            for col in range(2):
+        for row in range(3):
+            for col in range(3):
                 self.board[row + row_start][col + col_start] = self.random_array[self.counter]
                 self.counter += 1
         return None
@@ -126,16 +121,15 @@ class SudokuGenerator:
         self.fill_remaining(0, self.box_length)
 
     def remove_cells(self):
-        self.random_array = []
-        self.counter = 0
-        while self.counter <= self.removed_cells:
-            self.row = random.randint(0, 8)
-            self.col = random.randint(0, 8)
-            if [[self.row, self.col]] in self.random_array:
-                pass
-            else:
-                self.board[self.row][self.col] = 0
-                self.counter += 1
+        random_set = set()
+        counter = 0
+        while counter < self.removed_cells:
+            row = random.randint(0, 8)
+            col = random.randint(0, 8)
+            if (row, col) not in random_set:
+                counter += 1
+                self.board[row][col] = 0
+                random_set.add((row, col))
         # Call this function after all the values are filled for the sudoku puzzle. Used similar randomness in fill box to generate ordered pairs. I used ChatGPT to find out how to generate a random integer 0 - 8
 
 def generate_sudoku(size, removed):
@@ -145,8 +139,4 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
-<<<<<<< HEAD
     # Got this from given sudoku_generator.py file.
-=======
-    # Got this from given sudoku_generator.py file.
->>>>>>> origin/main
