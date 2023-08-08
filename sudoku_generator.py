@@ -1,4 +1,5 @@
 import math,random
+from cell import Cell
 
 class SudokuGenerator:
     # First array in array is the row, then in the row are the column numbers. This is how i am making the board for reference
