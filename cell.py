@@ -23,6 +23,3 @@ class Cell:
             num = str(self.value)
             draw_num = sing_num.render(num, 1, (000, 000, 000))
             self.screen.blit(draw_num, ((self.col*80)+22, (self.row*80)+9))
-
-
-
