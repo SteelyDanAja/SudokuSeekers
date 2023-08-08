@@ -2,6 +2,7 @@ from sudoku_generator import SudokuGenerator
 import pygame
 from constants import *
 import sys
+from cell import Cell
 
 def main():
 # Initialize pygame
