@@ -115,6 +115,4 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
-
-if __name__ == "__main__":
-    pass
+# Got this function from the given .py file

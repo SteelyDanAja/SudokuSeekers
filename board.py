@@ -1,7 +1,7 @@
 import pygame
 from constants import *
 from cell import Cell
-from sudoku_generator import SudokuGenerator
+from sudoku_generator import *
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
@@ -9,13 +9,36 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
-        self.cells = [[Cell() for _ in range(width)] for _ in range(height)]
         self.selected_cell = None
+        if difficulty == 'easy':
+            self.generated_sudoku = generate_sudoku(9, 30)
+        elif difficulty == 'medium':
+            self.generated_sudoku = generate_sudoku(9, 40)
+        elif difficulty == 'hard':
+            self.generated_sudoku = generate_sudoku(9, 50)
+        self.cells = [[Cell(self.generated_sudoku[j][i], j, i, screen) for i in range(width)] for j in range(height)]
+
 
     def draw(self):
-        # Draw Sudoku grid outline and cells
-        # Implement drawing logic here
-        pass
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE), (WIDTH, SQUARE_SIZE), LINE_WIDTH)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 2), (WIDTH, SQUARE_SIZE * 2), LINE_WIDTH)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 3), (WIDTH, SQUARE_SIZE * 3), LINE_WIDTH + 5)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 4), (WIDTH, SQUARE_SIZE * 4), LINE_WIDTH)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 5), (WIDTH, SQUARE_SIZE * 5), LINE_WIDTH)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 6), (WIDTH, SQUARE_SIZE * 6), LINE_WIDTH + 5)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 7), (WIDTH, SQUARE_SIZE * 7), LINE_WIDTH)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 8), (WIDTH, SQUARE_SIZE * 8), LINE_WIDTH)
+        pygame.draw.line(self.screen, LINE_COLOR, (0, SQUARE_SIZE * 9), (WIDTH, SQUARE_SIZE * 9), LINE_WIDTH + 5)
+        # Sets up the Horizontal Lines
+        for i in range(1, 10):
+            if i == 3 or i == 6 or i == 9:
+                pygame.draw.line(self.screen, LINE_COLOR, (SQUARE_SIZE * i, 0), (SQUARE_SIZE * i, HEIGHT-300), LINE_WIDTH + 5)
+            else:
+                pygame.draw.line(self.screen, LINE_COLOR, (SQUARE_SIZE * i, 0), (SQUARE_SIZE * i, HEIGHT - 300), LINE_WIDTH)
+        # Sets up the Vertical Lines
+        for i in range(9):
+            for j in range(9):
+                self.cells[i][j].draw()
 
     def select(self, row, col):
         self.selected_cell = (row, col)
